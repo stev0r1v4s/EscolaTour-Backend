@@ -60,6 +60,13 @@ jobs:
               cp .env.example .env
             fi
 
+            # Corregir permisos de Prisma
+            chmod +x node_modules/.bin/prisma || true
+
+            # Prisma
+            npx prisma generate
+            npx prisma migrate deploy
+
             # Prisma
             npx prisma generate
 
