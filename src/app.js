@@ -20,7 +20,7 @@ const app = express();
 
 // Middlewares
 app.use(cors({
-  origin: '*', // Allow all origins for easy development integration
+  origin: config.frontendUrl, // Allow configured frontend origin
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
@@ -42,6 +42,14 @@ app.use('/api/reservations', reservationRoutes);
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK', timestamp: new Date() });
+});
+
+// Test deployment endpoint
+app.get('/api/test-deploy', (req, res) => {
+  res.status(200).json({ 
+    message: '¡El backend se ha desplegado correctamente!', 
+    timestamp: new Date() 
+  });
 });
 
 // Global Error Handler
