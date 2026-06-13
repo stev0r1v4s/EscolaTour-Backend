@@ -56,6 +56,17 @@ class DestinationRepository {
   async countTotal() {
     return prisma.destination.count();
   }
+
+  async findTopVisited(limit = 5) {
+    return prisma.destination.findMany({
+      take: limit,
+      orderBy: {
+        reservations: {
+          _count: 'desc'
+        }
+      }
+    });
+  }
 }
 
 export const destinationRepository = new DestinationRepository();

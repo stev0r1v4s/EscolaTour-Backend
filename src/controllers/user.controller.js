@@ -41,6 +41,53 @@ class UserController {
       });
     }
   }
+
+  async updateProfile(req, res) {
+    try {
+      const userId = req.user.id;
+      const { fullName, email, phone, city } = req.body;
+      const updated = await userService.updateProfile(userId, { fullName, email, phone, city });
+      return res.status(200).json({
+        message: 'Perfil actualizado exitosamente.',
+        user: {
+          id: updated.id,
+          fullName: updated.fullName,
+          username: updated.username,
+          email: updated.email,
+          phone: updated.phone,
+          city: updated.city,
+          role: updated.role,
+          status: updated.status
+        }
+      });
+    } catch (error) {
+      return res.status(400).json({
+        message: error.message || 'Error al actualizar el perfil.'
+      });
+    }
+  }
+
+  async updateAvatar(req, res) {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: 'No se subió ninguna imagen.' });
+      }
+      
+      const avatarUrl = `/uploads/avatars/${req.file.filename}`;
+      const userId = req.user.id;
+      
+      const updated = await userService.updateAvatar(userId, avatarUrl);
+      
+      return res.status(200).json({
+        message: 'Foto de perfil actualizada exitosamente.',
+        avatarUrl: updated.avatarUrl
+      });
+    } catch (error) {
+      return res.status(400).json({
+        message: error.message || 'Error al actualizar la foto de perfil.'
+      });
+    }
+  }
 }
 
 export const userController = new UserController();

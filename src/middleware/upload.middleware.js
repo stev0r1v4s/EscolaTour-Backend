@@ -3,7 +3,7 @@ import path from 'path';
 import fs from 'fs';
 
 // Ensure upload directories exist
-const uploadDirs = ['uploads', 'uploads/images', 'uploads/documents'];
+const uploadDirs = ['uploads', 'uploads/images', 'uploads/documents', 'uploads/avatars'];
 uploadDirs.forEach(dir => {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
@@ -16,6 +16,8 @@ const storage = multer.diskStorage({
       cb(null, 'uploads/images');
     } else if (file.fieldname === 'pedagogicalGuide') {
       cb(null, 'uploads/documents');
+    } else if (file.fieldname === 'avatar') {
+      cb(null, 'uploads/avatars');
     } else {
       cb(null, 'uploads');
     }
@@ -28,11 +30,11 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-  if (file.fieldname === 'image') {
+  if (file.fieldname === 'image' || file.fieldname === 'avatar') {
     if (file.mimetype.startsWith('image/')) {
       cb(null, true);
     } else {
-      cb(new Error('El archivo de imagen debe ser una imagen válida (jpeg, png, webp, etc.)'), false);
+      cb(new Error('El archivo debe ser una imagen válida (jpeg, png, webp, etc.)'), false);
     }
   } else if (file.fieldname === 'pedagogicalGuide') {
     if (file.mimetype === 'application/pdf') {
@@ -55,3 +57,11 @@ export const uploadDestinationFiles = multer({
   { name: 'image', maxCount: 1 },
   { name: 'pedagogicalGuide', maxCount: 1 }
 ]);
+
+export const uploadAvatarFile = multer({
+  storage: storage,
+  fileFilter: fileFilter,
+  limits: {
+    fileSize: 5 * 1024 * 1024 // 5MB limit
+  }
+}).single('avatar');

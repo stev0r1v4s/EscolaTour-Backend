@@ -17,6 +17,9 @@ model User {
   status        String          @default("Activo")  // "Activo" | "Inactivo" | "Suspendido"
   createdAt     DateTime        @default(now())
   lastLogin     DateTime?
+  phone         String?         // optional phone number
+  city          String?         // optional city
+  avatarUrl     String?         // optional avatar image url
   tickets       SupportTicket[]
   reservations  Reservation[]
 }

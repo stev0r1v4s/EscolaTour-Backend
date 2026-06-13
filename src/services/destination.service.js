@@ -26,6 +26,10 @@ class DestinationService {
     return destinationRepository.findAll(filters);
   }
 
+  async getTopDestinations(limit = 5) {
+    return destinationRepository.findTopVisited(limit);
+  }
+
   async getDestinationById(id) {
     const destination = await destinationRepository.findById(id);
     if (!destination) {

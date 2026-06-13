@@ -7,6 +7,7 @@ const router = Router();
 
 // Public routes
 router.get('/', destinationController.getDestinations);
+router.get('/top', destinationController.getTopDestinations);
 router.get('/:id', destinationController.getDestinationById);
 
 // Admin-only routes (Requires JWT authentication + 'Administrador' role)

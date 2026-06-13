@@ -19,6 +19,19 @@ class DestinationController {
     }
   }
 
+  async getTopDestinations(req, res) {
+    try {
+      const limit = parseInt(req.query.limit, 10) || 5;
+      const destinations = await destinationService.getTopDestinations(limit);
+      return res.status(200).json(destinations);
+    } catch (error) {
+      return res.status(500).json({
+        message: 'Error al obtener los destinos más visitados.',
+        error: error.message
+      });
+    }
+  }
+
   async getDestinationById(req, res) {
     const { id } = req.params;
     try {

@@ -12,6 +12,18 @@ class StatsController {
       });
     }
   }
+
+  async getPublicStats(req, res) {
+    try {
+      const stats = await statsService.getPublicStats();
+      return res.status(200).json(stats);
+    } catch (error) {
+      return res.status(500).json({
+        message: 'Error al obtener estadísticas públicas.',
+        error: error.message
+      });
+    }
+  }
 }
 
 export const statsController = new StatsController();

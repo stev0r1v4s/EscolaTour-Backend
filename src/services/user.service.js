@@ -35,6 +35,26 @@ class UserService {
 
     return userRepository.update(id, { status });
   }
+
+  async updateProfile(id, { fullName, email, phone, city }) {
+    const user = await userRepository.findById(id);
+    if (!user) throw new Error('Usuario no encontrado.');
+
+    const data = {};
+    if (fullName !== undefined) data.fullName = fullName;
+    if (email !== undefined) data.email = email;
+    if (phone !== undefined) data.phone = phone;
+    if (city !== undefined) data.city = city;
+
+    return userRepository.update(id, data);
+  }
+
+  async updateAvatar(id, avatarUrl) {
+    const user = await userRepository.findById(id);
+    if (!user) throw new Error('Usuario no encontrado.');
+
+    return userRepository.update(id, { avatarUrl });
+  }
 }
 
 export const userService = new UserService();
