@@ -74,7 +74,8 @@ class DestinationService {
       benefits: parsedBenefits,
       latitude,
       longitude,
-      rating
+      rating,
+      status: destinationData.status || 'Borrador'
     });
   }
 
@@ -105,6 +106,9 @@ class DestinationService {
     }
     if (updateData.rating !== undefined) {
       dataToUpdate.rating = parseFloat(updateData.rating);
+    }
+    if (updateData.status !== undefined) {
+      dataToUpdate.status = updateData.status;
     }
 
     if (updateData.benefits !== undefined) {

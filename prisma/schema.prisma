@@ -37,6 +37,7 @@ model Destination {
   latitude            Float
   longitude           Float
   rating              Float         @default(5.0)
+  status              String        @default("Borrador") // "Borrador" | "Publicado"
   createdAt           DateTime      @default(now())
   reservations        Reservation[]
 }
