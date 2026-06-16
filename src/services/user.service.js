@@ -74,6 +74,12 @@ class UserService {
 
     return userRepository.update(id, data);
   }
+
+  async deleteAccount(id) {
+    const user = await userRepository.findById(id);
+    if (!user) throw new Error('Usuario no encontrado.');
+    return userRepository.delete(id);
+  }
 }
 
 export const userService = new UserService();

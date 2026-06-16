@@ -40,11 +40,25 @@ class ReservationRepository {
   async findAllByUserId(userId) {
     return prisma.reservation.findMany({
       where: { userId },
-      include: {
-        destination: true
-      },
+      include: { destination: true },
       orderBy: { startDate: 'desc' }
     });
+  }
+
+  async findById(id) {
+    return prisma.reservation.findUnique({ where: { id } });
+  }
+
+  async update(id, data) {
+    return prisma.reservation.update({
+      where: { id },
+      data,
+      include: { destination: true }
+    });
+  }
+
+  async delete(id) {
+    return prisma.reservation.delete({ where: { id } });
   }
 
   async findAll() {

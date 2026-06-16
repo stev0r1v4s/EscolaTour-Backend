@@ -22,10 +22,30 @@ class ReservationController {
       const reservations = await reservationService.getUserReservations(userId);
       return res.status(200).json(reservations);
     } catch (error) {
-      return res.status(500).json({
-        message: 'Error al obtener tus reservas.',
-        error: error.message
-      });
+      return res.status(500).json({ message: 'Error al obtener tus reservas.', error: error.message });
+    }
+  }
+
+  async cancelReservation(req, res) {
+    const userId = req.user.id;
+    const { id } = req.params;
+    try {
+      await reservationService.cancelReservation(userId, id);
+      return res.status(200).json({ message: 'Reserva cancelada exitosamente.' });
+    } catch (error) {
+      return res.status(400).json({ message: error.message || 'Error al cancelar la reserva.' });
+    }
+  }
+
+  async updateReservation(req, res) {
+    const userId = req.user.id;
+    const { id } = req.params;
+    const { numTeachers, numStudents } = req.body;
+    try {
+      const updated = await reservationService.updateReservation(userId, id, { numTeachers, numStudents });
+      return res.status(200).json({ message: 'Reserva actualizada exitosamente.', reservation: updated });
+    } catch (error) {
+      return res.status(400).json({ message: error.message || 'Error al actualizar la reserva.' });
     }
   }
 

@@ -39,6 +39,25 @@ class ReservationService {
     return reservationRepository.findAllByUserId(userId);
   }
 
+  async cancelReservation(userId, reservationId) {
+    const reservation = await reservationRepository.findById(reservationId);
+    if (!reservation) throw new Error('Reserva no encontrada.');
+    if (reservation.userId !== userId) throw new Error('No tienes permiso para cancelar esta reserva.');
+    return reservationRepository.delete(reservationId);
+  }
+
+  async updateReservation(userId, reservationId, { numTeachers, numStudents }) {
+    const reservation = await reservationRepository.findById(reservationId);
+    if (!reservation) throw new Error('Reserva no encontrada.');
+    if (reservation.userId !== userId) throw new Error('No tienes permiso para editar esta reserva.');
+
+    const data = {};
+    if (numTeachers !== undefined) data.numTeachers = parseInt(numTeachers, 10);
+    if (numStudents !== undefined) data.numStudents = parseInt(numStudents, 10);
+
+    return reservationRepository.update(reservationId, data);
+  }
+
   async getAllReservations() {
     return reservationRepository.findAll();
   }

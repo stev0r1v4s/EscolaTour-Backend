@@ -13,5 +13,6 @@ router.patch('/:id/status', authenticate, authorize('Administrador'), userContro
 router.patch('/me/profile', authenticate, userController.updateProfile);
 router.post('/me/avatar', authenticate, uploadAvatarFile, userController.updateAvatar);
 router.patch('/me/preferences', authenticate, userController.updatePreferences);
+router.delete('/me', authenticate, userController.deleteAccount);
 
 export default router;

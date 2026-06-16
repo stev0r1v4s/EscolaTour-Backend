@@ -32,6 +32,10 @@ class UserRepository {
     });
   }
 
+  async delete(id) {
+    return prisma.user.delete({ where: { id } });
+  }
+
   async findPaginated({ skip, take, search }) {
     const whereClause = search ? {
       OR: [
