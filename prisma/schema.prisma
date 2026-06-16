@@ -30,6 +30,7 @@ model User {
   tickets       SupportTicket[]
   reservations  Reservation[]
   reports       DestinationReport[]
+  reviews       DestinationReview[]
 }
 
 model Destination {
@@ -49,6 +50,7 @@ model Destination {
   createdAt           DateTime      @default(now())
   reservations        Reservation[]
   reports             DestinationReport[]
+  reviews             DestinationReview[]
 }
 
 model SupportTicket {
@@ -83,5 +85,16 @@ model DestinationReport {
   reason        String
   details       String?
   status        String      @default("Pendiente") // "Pendiente" | "Revisado" | "Descartado"
+  createdAt     DateTime    @default(now())
+}
+
+model DestinationReview {
+  id            String      @id @default(uuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  destinationId String
+  destination   Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+  rating        Int
+  comment       String
   createdAt     DateTime    @default(now())
 }

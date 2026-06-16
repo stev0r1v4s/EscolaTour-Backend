@@ -1,0 +1,29 @@
+import { reviewService } from '../services/review.service.js';
+
+class ReviewController {
+  async createReview(req, res) {
+    try {
+      const userId = req.user.id;
+      const destinationId = req.params.id;
+      const { rating, comment } = req.body;
+      const review = await reviewService.createReview(userId, destinationId, rating, comment);
+      return res.status(201).json({ message: 'Reseña publicada exitosamente.', review });
+    } catch (error) {
+      return res.status(400).json({ message: error.message || 'Error al publicar la reseña.' });
+    }
+  }
+
+  async getReviews(req, res) {
+    try {
+      const { id } = req.params;
+      const page  = parseInt(req.query.page,  10) || 1;
+      const limit = parseInt(req.query.limit, 10) || 10;
+      const result = await reviewService.getReviews(id, { page, limit });
+      return res.status(200).json(result);
+    } catch (error) {
+      return res.status(500).json({ message: 'Error al obtener las reseñas.', error: error.message });
+    }
+  }
+}
+
+export const reviewController = new ReviewController();
