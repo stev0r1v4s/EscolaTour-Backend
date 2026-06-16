@@ -10,6 +10,18 @@ class ReviewService {
   async getReviews(destinationId, { page, limit } = {}) {
     return reviewRepository.findByDestination(destinationId, { page, limit });
   }
+
+  async getTopReviews(limit = 6) {
+    return reviewRepository.findTopLiked(limit);
+  }
+
+  async likeReview(id) {
+    return reviewRepository.incrementLikes(id);
+  }
+
+  async dislikeReview(id) {
+    return reviewRepository.incrementDislikes(id);
+  }
 }
 
 export const reviewService = new ReviewService();

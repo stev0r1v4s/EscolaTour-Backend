@@ -96,5 +96,7 @@ model DestinationReview {
   destination   Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
   rating        Int
   comment       String
+  likes         Int         @default(0)
+  dislikes      Int         @default(0)
   createdAt     DateTime    @default(now())
 }
