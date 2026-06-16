@@ -49,11 +49,26 @@ class ReservationRepository {
     return prisma.reservation.findUnique({ where: { id } });
   }
 
+  async updateOwned(userId, id, data) {
+    return prisma.reservation.update({
+      where: { id, userId },
+      data,
+      include: { destination: true }
+    });
+  }
+
   async update(id, data) {
     return prisma.reservation.update({
       where: { id },
       data,
       include: { destination: true }
+    });
+  }
+
+  async deleteOwned(userId, id) {
+    // Delete only if the reservation belongs to this user
+    return prisma.reservation.deleteMany({
+      where: { id, userId }
     });
   }
 

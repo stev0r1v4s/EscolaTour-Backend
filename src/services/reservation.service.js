@@ -40,22 +40,28 @@ class ReservationService {
   }
 
   async cancelReservation(userId, reservationId) {
-    const reservation = await reservationRepository.findById(reservationId);
-    if (!reservation) throw new Error('Reserva no encontrada.');
-    if (reservation.userId !== userId) throw new Error('No tienes permiso para cancelar esta reserva.');
-    return reservationRepository.delete(reservationId);
+    // Try to delete directly — Prisma will throw if not found
+    try {
+      const deleted = await reservationRepository.deleteOwned(userId, reservationId);
+      return deleted;
+    } catch (err) {
+      if (err.code === 'P2025') throw new Error('Reserva no encontrada o ya fue cancelada.');
+      if (err.message?.includes('permiso')) throw err;
+      throw new Error('Error al cancelar la reserva.');
+    }
   }
 
   async updateReservation(userId, reservationId, { numTeachers, numStudents }) {
-    const reservation = await reservationRepository.findById(reservationId);
-    if (!reservation) throw new Error('Reserva no encontrada.');
-    if (reservation.userId !== userId) throw new Error('No tienes permiso para editar esta reserva.');
-
     const data = {};
     if (numTeachers !== undefined) data.numTeachers = parseInt(numTeachers, 10);
     if (numStudents !== undefined) data.numStudents = parseInt(numStudents, 10);
 
-    return reservationRepository.update(reservationId, data);
+    try {
+      return await reservationRepository.updateOwned(userId, reservationId, data);
+    } catch (err) {
+      if (err.code === 'P2025') throw new Error('Reserva no encontrada.');
+      throw err;
+    }
   }
 
   async getAllReservations() {
