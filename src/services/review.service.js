@@ -15,12 +15,16 @@ class ReviewService {
     return reviewRepository.findTopLiked(limit);
   }
 
-  async likeReview(id) {
-    return reviewRepository.incrementLikes(id);
+  async likeReview(reviewId, userId) {
+    return reviewRepository.likeReview(reviewId, userId);
   }
 
-  async dislikeReview(id) {
-    return reviewRepository.incrementDislikes(id);
+  async dislikeReview(reviewId, userId) {
+    return reviewRepository.dislikeReview(reviewId, userId);
+  }
+
+  async getUserVote(reviewId, userId) {
+    return reviewRepository.getUserVote(reviewId, userId);
   }
 }
 

@@ -36,20 +36,113 @@ class ReviewRepository {
     });
   }
 
-  async incrementLikes(id) {
-    return prisma.destinationReview.update({
-      where: { id },
-      data: { likes: { increment: 1 } },
-      include: REVIEW_INCLUDE
+  async likeReview(reviewId, userId) {
+    // Check existing vote
+    const existingVote = await prisma.reviewLike.findUnique({
+      where: { reviewId_userId: { reviewId, userId } }
     });
+
+    if (existingVote) {
+      if (existingVote.voteType === 'like') {
+        // Already liked — do nothing (idempotent)
+        return prisma.destinationReview.findUnique({
+          where: { id: reviewId },
+          include: REVIEW_INCLUDE
+        });
+      } else {
+        // Switch from dislike to like
+        await prisma.$transaction([
+          prisma.reviewLike.update({
+            where: { reviewId_userId: { reviewId, userId } },
+            data: { voteType: 'like' }
+          }),
+          prisma.destinationReview.update({
+            where: { id: reviewId },
+            data: {
+              dislikes: { decrement: 1 },
+              likes: { increment: 1 }
+            }
+          })
+        ]);
+        return prisma.destinationReview.findUnique({
+          where: { id: reviewId },
+          include: REVIEW_INCLUDE
+        });
+      }
+    } else {
+      // New like
+      await prisma.$transaction([
+        prisma.reviewLike.create({
+          data: { reviewId, userId, voteType: 'like' }
+        }),
+        prisma.destinationReview.update({
+          where: { id: reviewId },
+          data: { likes: { increment: 1 } }
+        })
+      ]);
+      return prisma.destinationReview.findUnique({
+        where: { id: reviewId },
+        include: REVIEW_INCLUDE
+      });
+    }
   }
 
-  async incrementDislikes(id) {
-    return prisma.destinationReview.update({
-      where: { id },
-      data: { dislikes: { increment: 1 } },
-      include: REVIEW_INCLUDE
+  async dislikeReview(reviewId, userId) {
+    // Check existing vote
+    const existingVote = await prisma.reviewLike.findUnique({
+      where: { reviewId_userId: { reviewId, userId } }
     });
+
+    if (existingVote) {
+      if (existingVote.voteType === 'dislike') {
+        // Already disliked — do nothing (idempotent)
+        return prisma.destinationReview.findUnique({
+          where: { id: reviewId },
+          include: REVIEW_INCLUDE
+        });
+      } else {
+        // Switch from like to dislike
+        await prisma.$transaction([
+          prisma.reviewLike.update({
+            where: { reviewId_userId: { reviewId, userId } },
+            data: { voteType: 'dislike' }
+          }),
+          prisma.destinationReview.update({
+            where: { id: reviewId },
+            data: {
+              likes: { decrement: 1 },
+              dislikes: { increment: 1 }
+            }
+          })
+        ]);
+        return prisma.destinationReview.findUnique({
+          where: { id: reviewId },
+          include: REVIEW_INCLUDE
+        });
+      }
+    } else {
+      // New dislike
+      await prisma.$transaction([
+        prisma.reviewLike.create({
+          data: { reviewId, userId, voteType: 'dislike' }
+        }),
+        prisma.destinationReview.update({
+          where: { id: reviewId },
+          data: { dislikes: { increment: 1 } }
+        })
+      ]);
+      return prisma.destinationReview.findUnique({
+        where: { id: reviewId },
+        include: REVIEW_INCLUDE
+      });
+    }
+  }
+
+  async getUserVote(reviewId, userId) {
+    const vote = await prisma.reviewLike.findUnique({
+      where: { reviewId_userId: { reviewId, userId } }
+    });
+    return vote?.voteType || null;
   }
 }
 

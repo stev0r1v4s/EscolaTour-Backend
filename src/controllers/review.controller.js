@@ -37,8 +37,9 @@ class ReviewController {
 
   async likeReview(req, res) {
     try {
-      const { id } = req.params;
-      const updated = await reviewService.likeReview(id);
+      const reviewId = req.params.id;
+      const userId = req.user.id;
+      const updated = await reviewService.likeReview(reviewId, userId);
       return res.status(200).json({ message: 'Like registrado.', review: updated });
     } catch (error) {
       return res.status(400).json({ message: error.message || 'Error al registrar like.' });
@@ -47,8 +48,9 @@ class ReviewController {
 
   async dislikeReview(req, res) {
     try {
-      const { id } = req.params;
-      const updated = await reviewService.dislikeReview(id);
+      const reviewId = req.params.id;
+      const userId = req.user.id;
+      const updated = await reviewService.dislikeReview(reviewId, userId);
       return res.status(200).json({ message: 'Dislike registrado.', review: updated });
     } catch (error) {
       return res.status(400).json({ message: error.message || 'Error al registrar dislike.' });

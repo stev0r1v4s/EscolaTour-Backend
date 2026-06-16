@@ -89,14 +89,26 @@ model DestinationReport {
 }
 
 model DestinationReview {
-  id            String      @id @default(uuid())
+  id            String       @id @default(uuid())
   userId        String
-  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   destinationId String
-  destination   Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+  destination   Destination  @relation(fields: [destinationId], references: [id], onDelete: Cascade)
   rating        Int
   comment       String
-  likes         Int         @default(0)
-  dislikes      Int         @default(0)
-  createdAt     DateTime    @default(now())
+  likes         Int          @default(0)
+  dislikes      Int          @default(0)
+  createdAt     DateTime     @default(now())
+  votes         ReviewLike[]
+}
+
+model ReviewLike {
+  id        String            @id @default(uuid())
+  reviewId  String
+  review    DestinationReview @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  userId    String
+  voteType  String            // "like" | "dislike"
+  createdAt DateTime          @default(now())
+
+  @@unique([reviewId, userId])
 }
