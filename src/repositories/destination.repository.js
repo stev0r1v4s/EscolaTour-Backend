@@ -49,6 +49,22 @@ class DestinationRepository {
 
     return prisma.destination.findMany({
       where: whereClause,
+      select: {
+        id: true,
+        title: true,
+        location: true,
+        price: true,
+        category: true,
+        description: true,
+        imageUrl: true,
+        pedagogicalGuideUrl: true,
+        benefits: true,
+        latitude: true,
+        longitude: true,
+        rating: true,
+        status: true,
+        createdAt: true
+      },
       orderBy: { createdAt: 'desc' }
     });
   }

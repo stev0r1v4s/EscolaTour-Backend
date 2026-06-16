@@ -2,8 +2,8 @@ import { ticketRepository } from '../repositories/ticket.repository.js';
 import { userRepository } from '../repositories/user.repository.js';
 
 class TicketService {
-  async getTickets() {
-    return ticketRepository.findAll();
+  async getTickets({ page = 1, limit = 20, status } = {}) {
+    return ticketRepository.findAll({ page, limit, status });
   }
 
   async createTicket(userId, subject, message) {

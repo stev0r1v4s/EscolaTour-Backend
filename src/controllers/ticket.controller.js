@@ -3,8 +3,12 @@ import { ticketService } from '../services/ticket.service.js';
 class TicketController {
   async getTickets(req, res) {
     try {
-      const tickets = await ticketService.getTickets();
-      return res.status(200).json(tickets);
+      const page  = parseInt(req.query.page, 10)  || 1;
+      const limit = parseInt(req.query.limit, 10) || 20;
+      const { status } = req.query;
+
+      const result = await ticketService.getTickets({ page, limit, status });
+      return res.status(200).json(result);
     } catch (error) {
       return res.status(500).json({
         message: 'Error al obtener los tickets de soporte.',
