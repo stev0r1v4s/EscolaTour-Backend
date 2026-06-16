@@ -39,11 +39,11 @@ class AuthService {
     const token = this.generateToken(newUser);
 
     // Remove password from response
-    const { password: _, ...userWithoutPassword } = newUser;
+    const userResponse = this.formatUserForResponse(newUser);
 
     return {
       token,
-      user: userWithoutPassword
+      user: userResponse
     };
   }
 
@@ -86,11 +86,11 @@ class AuthService {
     const token = this.generateToken(updatedUser);
 
     // Remove password from response
-    const { password: _, ...userWithoutPassword } = updatedUser;
+    const userResponse = this.formatUserForResponse(updatedUser);
 
     return {
       token,
-      user: userWithoutPassword
+      user: userResponse
     };
   }
 
@@ -110,6 +110,40 @@ class AuthService {
       config.jwtSecret,
       { expiresIn: config.jwtExpiresIn }
     );
+  }
+
+  /**
+   * Format user object for response (remove password, include all fields)
+   */
+  formatUserForResponse(user) {
+    const { password, ...userWithoutPassword } = user;
+    return userWithoutPassword;
+  }
+
+  /**
+   * Change user password
+   */
+  async changePassword(userId, currentPassword, newPassword) {
+    const user = await userRepository.findById(userId);
+    if (!user) {
+      throw new Error('Usuario no encontrado.');
+    }
+
+    // Verify current password
+    const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+    if (!isPasswordValid) {
+      throw new Error('La contraseña actual es incorrecta.');
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update password in DB
+    await userRepository.update(userId, { password: hashedPassword });
+
+    return {
+      message: 'Contraseña actualizada exitosamente.'
+    };
   }
 }
 

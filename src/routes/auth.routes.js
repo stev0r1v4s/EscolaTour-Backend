@@ -11,4 +11,7 @@ router.post('/login', authController.login);
 // Private route (to verify current token user details)
 router.get('/me', authenticate, authController.getCurrentUser);
 
+// Password change
+router.post('/me/change-password', authenticate, authController.changePassword);
+
 export default router;

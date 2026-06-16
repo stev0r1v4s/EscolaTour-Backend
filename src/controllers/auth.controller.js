@@ -55,6 +55,28 @@ class AuthController {
       user: req.user
     });
   }
+
+  async changePassword(req, res) {
+    try {
+      const userId = req.user.id;
+      const { currentPassword, newPassword } = req.body;
+
+      if (!currentPassword || !newPassword) {
+        return res.status(400).json({
+          message: 'La contraseña actual y la nueva contraseña son obligatorias.'
+        });
+      }
+
+      const result = await authService.changePassword(userId, currentPassword, newPassword);
+      return res.status(200).json({
+        message: result.message
+      });
+    } catch (error) {
+      return res.status(400).json({
+        message: error.message || 'Error al cambiar la contraseña.'
+      });
+    }
+  }
 }
 
 export const authController = new AuthController();

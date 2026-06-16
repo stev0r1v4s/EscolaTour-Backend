@@ -56,8 +56,14 @@ class UserController {
           email: updated.email,
           phone: updated.phone,
           city: updated.city,
+          avatarUrl: updated.avatarUrl,
           role: updated.role,
-          status: updated.status
+          status: updated.status,
+          language: updated.language,
+          currency: updated.currency,
+          publicProfile: updated.publicProfile,
+          searchHistory: updated.searchHistory,
+          theme: updated.theme
         }
       });
     } catch (error) {
@@ -80,7 +86,22 @@ class UserController {
       
       return res.status(200).json({
         message: 'Foto de perfil actualizada exitosamente.',
-        avatarUrl: updated.avatarUrl
+        user: {
+          id: updated.id,
+          fullName: updated.fullName,
+          username: updated.username,
+          email: updated.email,
+          phone: updated.phone,
+          city: updated.city,
+          avatarUrl: updated.avatarUrl,
+          role: updated.role,
+          status: updated.status,
+          language: updated.language,
+          currency: updated.currency,
+          publicProfile: updated.publicProfile,
+          searchHistory: updated.searchHistory,
+          theme: updated.theme
+        }
       });
     } catch (error) {
       return res.status(400).json({
