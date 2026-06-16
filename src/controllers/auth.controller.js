@@ -69,7 +69,8 @@ class AuthController {
 
       const result = await authService.changePassword(userId, currentPassword, newPassword);
       return res.status(200).json({
-        message: result.message
+        message: result.message,
+        passwordChangedAt: result.passwordChangedAt
       });
     } catch (error) {
       return res.status(400).json({

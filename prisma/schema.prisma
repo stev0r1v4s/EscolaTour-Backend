@@ -20,6 +20,7 @@ model User {
   phone         String?         // optional phone number
   city          String?         // optional city
   avatarUrl     String?         // optional avatar image url
+  passwordChangedAt DateTime?   // last time password was changed
   // Preferences
   language      String          @default("es-CO")
   currency      String          @default("COP")

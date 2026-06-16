@@ -138,11 +138,15 @@ class AuthService {
     // Hash new password
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-    // Update password in DB
-    await userRepository.update(userId, { password: hashedPassword });
+    // Update password and timestamp in DB
+    await userRepository.update(userId, {
+      password: hashedPassword,
+      passwordChangedAt: new Date()
+    });
 
     return {
-      message: 'Contraseña actualizada exitosamente.'
+      message: 'Contraseña actualizada exitosamente.',
+      passwordChangedAt: new Date()
     };
   }
 }
