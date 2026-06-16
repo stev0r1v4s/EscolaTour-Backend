@@ -28,6 +28,7 @@ model User {
   theme         String          @default("Claro")
   tickets       SupportTicket[]
   reservations  Reservation[]
+  reports       DestinationReport[]
 }
 
 model Destination {
@@ -46,6 +47,7 @@ model Destination {
   status              String        @default("Borrador") // "Borrador" | "Publicado"
   createdAt           DateTime      @default(now())
   reservations        Reservation[]
+  reports             DestinationReport[]
 }
 
 model SupportTicket {
@@ -68,5 +70,17 @@ model Reservation {
   endDate       DateTime
   numTeachers   Int         @default(0)
   numStudents   Int         @default(0)
+  createdAt     DateTime    @default(now())
+}
+
+model DestinationReport {
+  id            String      @id @default(uuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  destinationId String
+  destination   Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+  reason        String
+  details       String?
+  status        String      @default("Pendiente") // "Pendiente" | "Revisado" | "Descartado"
   createdAt     DateTime    @default(now())
 }

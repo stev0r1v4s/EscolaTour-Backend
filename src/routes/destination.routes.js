@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { destinationController } from '../controllers/destination.controller.js';
+import { reportController } from '../controllers/report.controller.js';
 import { authenticate, authorize } from '../middleware/auth.middleware.js';
 import { uploadDestinationFiles } from '../middleware/upload.middleware.js';
 
@@ -10,28 +11,12 @@ router.get('/', destinationController.getDestinations);
 router.get('/top', destinationController.getTopDestinations);
 router.get('/:id', destinationController.getDestinationById);
 
-// Admin-only routes (Requires JWT authentication + 'Administrador' role)
-router.post(
-  '/', 
-  authenticate, 
-  authorize('Administrador'), 
-  uploadDestinationFiles, 
-  destinationController.createDestination
-);
+// Authenticated user: submit a report on a destination
+router.post('/:id/report', authenticate, reportController.createReport);
 
-router.put(
-  '/:id', 
-  authenticate, 
-  authorize('Administrador'), 
-  uploadDestinationFiles, 
-  destinationController.updateDestination
-);
-
-router.delete(
-  '/:id', 
-  authenticate, 
-  authorize('Administrador'), 
-  destinationController.deleteDestination
-);
+// Admin-only routes
+router.post('/', authenticate, authorize('Administrador'), uploadDestinationFiles, destinationController.createDestination);
+router.put('/:id', authenticate, authorize('Administrador'), uploadDestinationFiles, destinationController.updateDestination);
+router.delete('/:id', authenticate, authorize('Administrador'), destinationController.deleteDestination);
 
 export default router;

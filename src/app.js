@@ -11,6 +11,7 @@ import userRoutes from './routes/user.routes.js';
 import ticketRoutes from './routes/ticket.routes.js';
 import statsRoutes from './routes/stats.routes.js';
 import reservationRoutes from './routes/reservation.routes.js';
+import reportRoutes from './routes/report.routes.js';
 
 // Resolve directory paths for ES Modules
 const __filename = fileURLToPath(import.meta.url);
@@ -38,6 +39,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/support/tickets', ticketRoutes);
 app.use('/api/stats', statsRoutes);
 app.use('/api/reservations', reservationRoutes);
+app.use('/api/reports', reportRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
