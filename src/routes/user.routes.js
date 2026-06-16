@@ -12,5 +12,6 @@ router.patch('/:id/status', authenticate, authorize('Administrador'), userContro
 // Authenticated user profile update
 router.patch('/me/profile', authenticate, userController.updateProfile);
 router.post('/me/avatar', authenticate, uploadAvatarFile, userController.updateAvatar);
+router.patch('/me/preferences', authenticate, userController.updatePreferences);
 
 export default router;

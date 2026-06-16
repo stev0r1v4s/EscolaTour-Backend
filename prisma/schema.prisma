@@ -20,6 +20,12 @@ model User {
   phone         String?         // optional phone number
   city          String?         // optional city
   avatarUrl     String?         // optional avatar image url
+  // Preferences
+  language      String          @default("es-CO")
+  currency      String          @default("COP")
+  publicProfile Boolean         @default(true)
+  searchHistory Boolean         @default(true)
+  theme         String          @default("Claro")
   tickets       SupportTicket[]
   reservations  Reservation[]
 }

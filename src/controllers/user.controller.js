@@ -88,6 +88,36 @@ class UserController {
       });
     }
   }
+
+  async updatePreferences(req, res) {
+    try {
+      const userId = req.user.id;
+      const { language, currency, publicProfile, searchHistory, theme } = req.body;
+
+      const updated = await userService.updatePreferences(userId, {
+        language,
+        currency,
+        publicProfile,
+        searchHistory,
+        theme
+      });
+
+      return res.status(200).json({
+        message: 'Preferencias actualizadas exitosamente.',
+        preferences: {
+          language:      updated.language,
+          currency:      updated.currency,
+          publicProfile: updated.publicProfile,
+          searchHistory: updated.searchHistory,
+          theme:         updated.theme
+        }
+      });
+    } catch (error) {
+      return res.status(400).json({
+        message: error.message || 'Error al actualizar las preferencias.'
+      });
+    }
+  }
 }
 
 export const userController = new UserController();

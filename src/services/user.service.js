@@ -55,6 +55,25 @@ class UserService {
 
     return userRepository.update(id, { avatarUrl });
   }
+
+  async updatePreferences(id, { language, currency, publicProfile, searchHistory, theme }) {
+    const user = await userRepository.findById(id);
+    if (!user) throw new Error('Usuario no encontrado.');
+
+    const validThemes = ['Claro', 'Oscuro'];
+    if (theme !== undefined && !validThemes.includes(theme)) {
+      throw new Error('Tema inválido. Debe ser: Claro u Oscuro.');
+    }
+
+    const data = {};
+    if (language      !== undefined) data.language      = language;
+    if (currency      !== undefined) data.currency      = currency;
+    if (publicProfile !== undefined) data.publicProfile = publicProfile;
+    if (searchHistory !== undefined) data.searchHistory = searchHistory;
+    if (theme         !== undefined) data.theme         = theme;
+
+    return userRepository.update(id, data);
+  }
 }
 
 export const userService = new UserService();
