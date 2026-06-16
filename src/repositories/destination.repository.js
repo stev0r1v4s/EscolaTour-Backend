@@ -67,6 +67,23 @@ class DestinationRepository {
       }
     });
   }
+
+  async getUniqueCategoriesCount() {
+    const result = await prisma.destination.findMany({
+      select: { category: true },
+      distinct: ['category']
+    });
+    return result.length;
+  }
+
+  async getAverageRating() {
+    const result = await prisma.destination.aggregate({
+      _avg: {
+        rating: true
+      }
+    });
+    return result._avg.rating || 5.0;
+  }
 }
 
 export const destinationRepository = new DestinationRepository();

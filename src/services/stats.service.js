@@ -18,21 +18,14 @@ class StatsService {
   }
 
   async getPublicStats() {
-    const [destinosEducativos, usuariosRegistrados, destinations] = await Promise.all([
+    const [destinosEducativos, usuariosRegistrados, categoriasTematicas, calificacionPromedioBruta] = await Promise.all([
       destinationRepository.countTotal(),
       userRepository.countActiveUsers(),
-      destinationRepository.findAll()
+      destinationRepository.getUniqueCategoriesCount(),
+      destinationRepository.getAverageRating()
     ]);
 
-    // calculate unique categories and average rating
-    const uniqueCategories = new Set(destinations.map(d => d.category));
-    const categoriasTematicas = uniqueCategories.size;
-
-    let calificacionPromedio = 5.0;
-    if (destinations.length > 0) {
-      const sumRatings = destinations.reduce((sum, d) => sum + (d.rating || 0), 0);
-      calificacionPromedio = Number((sumRatings / destinations.length).toFixed(1));
-    }
+    const calificacionPromedio = Number(calificacionPromedioBruta.toFixed(1));
 
     return {
       destinosEducativos,

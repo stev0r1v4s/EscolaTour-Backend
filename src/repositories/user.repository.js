@@ -35,9 +35,9 @@ class UserRepository {
   async findPaginated({ skip, take, search }) {
     const whereClause = search ? {
       OR: [
-        { fullName: { contains: search } },
-        { email: { contains: search } },
-        { username: { contains: search } }
+        { fullName: { contains: search, mode: 'insensitive' } },
+        { email: { contains: search, mode: 'insensitive' } },
+        { username: { contains: search, mode: 'insensitive' } }
       ]
     } : {};
 
@@ -62,9 +62,9 @@ class UserRepository {
   async count(search) {
     const whereClause = search ? {
       OR: [
-        { fullName: { contains: search } },
-        { email: { contains: search } },
-        { username: { contains: search } }
+        { fullName: { contains: search, mode: 'insensitive' } },
+        { email: { contains: search, mode: 'insensitive' } },
+        { username: { contains: search, mode: 'insensitive' } }
       ]
     } : {};
 
