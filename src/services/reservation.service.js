@@ -64,6 +64,15 @@ class ReservationService {
     }
   }
 
+  async adminUpdateReservation(id, data) {
+    try {
+      return await reservationRepository.update(id, data);
+    } catch (err) {
+      if (err.code === 'P2025') throw new Error('Reserva no encontrada.');
+      throw err;
+    }
+  }
+
   async getAllReservations({ page, limit, search } = {}) {
     return reservationRepository.findAll({ page, limit, search });
   }

@@ -49,6 +49,23 @@ class ReservationController {
     }
   }
 
+  async adminUpdateReservation(req, res) {
+    const { id } = req.params;
+    const { numTeachers, numStudents, startDate, endDate } = req.body;
+    try {
+      const data = {};
+      if (numTeachers !== undefined) data.numTeachers = parseInt(numTeachers, 10);
+      if (numStudents !== undefined) data.numStudents = parseInt(numStudents, 10);
+      if (startDate) data.startDate = new Date(startDate);
+      if (endDate)   data.endDate   = new Date(endDate);
+
+      const updated = await reservationService.adminUpdateReservation(id, data);
+      return res.status(200).json({ message: 'Reserva actualizada exitosamente.', reservation: updated });
+    } catch (error) {
+      return res.status(400).json({ message: error.message || 'Error al actualizar la reserva.' });
+    }
+  }
+
   async getAllReservations(req, res) {
     try {
       const page  = parseInt(req.query.page,  10) || 1;
