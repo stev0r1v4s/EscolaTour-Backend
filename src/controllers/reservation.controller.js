@@ -51,8 +51,11 @@ class ReservationController {
 
   async getAllReservations(req, res) {
     try {
-      const reservations = await reservationService.getAllReservations();
-      return res.status(200).json(reservations);
+      const page  = parseInt(req.query.page,  10) || 1;
+      const limit = parseInt(req.query.limit, 10) || 20;
+      const search = req.query.search || '';
+      const result = await reservationService.getAllReservations({ page, limit, search });
+      return res.status(200).json(result);
     } catch (error) {
       return res.status(500).json({
         message: 'Error al obtener el historial de reservas.',

@@ -64,8 +64,8 @@ class ReservationService {
     }
   }
 
-  async getAllReservations() {
-    return reservationRepository.findAll();
+  async getAllReservations({ page, limit, search } = {}) {
+    return reservationRepository.findAll({ page, limit, search });
   }
 }
 

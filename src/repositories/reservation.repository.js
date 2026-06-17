@@ -76,19 +76,31 @@ class ReservationRepository {
     return prisma.reservation.delete({ where: { id } });
   }
 
-  async findAll() {
-    return prisma.reservation.findMany({
-      include: {
-        user: {
-          select: {
-            fullName: true,
-            email: true
-          }
+  async findAll({ page = 1, limit = 20, search = '' } = {}) {
+    const skip = (page - 1) * limit;
+    const where = search ? {
+      OR: [
+        { user: { fullName: { contains: search, mode: 'insensitive' } } },
+        { user: { email: { contains: search, mode: 'insensitive' } } },
+        { destination: { title: { contains: search, mode: 'insensitive' } } }
+      ]
+    } : {};
+
+    const [reservations, total] = await Promise.all([
+      prisma.reservation.findMany({
+        where,
+        include: {
+          user: { select: { fullName: true, email: true } },
+          destination: { select: { title: true, location: true, imageUrl: true, price: true } }
         },
-        destination: true
-      },
-      orderBy: { createdAt: 'desc' }
-    });
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit
+      }),
+      prisma.reservation.count({ where })
+    ]);
+
+    return { reservations, total, page, totalPages: Math.ceil(total / limit) };
   }
 }
 
