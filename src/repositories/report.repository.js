@@ -20,7 +20,7 @@ class ReportRepository {
         where,
         include: {
           user:        { select: { fullName: true, email: true } },
-          destination: { select: { title: true, imageUrl: true } }
+          destination: { select: { title: true, location: true, imageUrl: true } }
         },
         orderBy: { createdAt: 'desc' },
         skip,
