@@ -14,17 +14,13 @@ model User {
   email         String          @unique
   password      String
   role          String          @default("Usuario") // "Administrador" | "Usuario"
-  status        String          @default("Pendiente") // "Pendiente" | "Activo" | "Inactivo" | "Suspendido"
+  status        String          @default("Activo")  // "Activo" | "Inactivo" | "Suspendido"
   createdAt     DateTime        @default(now())
   lastLogin     DateTime?
   phone         String?         // optional phone number
   city          String?         // optional city
   avatarUrl     String?         // optional avatar image url
   passwordChangedAt DateTime?   // last time password was changed
-  // Email verification
-  emailVerified           Boolean   @default(false)
-  verificationToken       String?   // raw token stored hashed
-  verificationTokenExpiry DateTime? // expires 24h after registration
   // Preferences
   language      String          @default("es-CO")
   currency      String          @default("COP")

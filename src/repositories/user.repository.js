@@ -32,12 +32,6 @@ class UserRepository {
     });
   }
 
-  async findByVerificationToken(hashedToken) {
-    return prisma.user.findFirst({
-      where: { verificationToken: hashedToken }
-    });
-  }
-
   async delete(id) {
     return prisma.user.delete({ where: { id } });
   }
